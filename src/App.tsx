@@ -1,13 +1,15 @@
 import "./App.scss";
-import Header from "./components/Header";
-import BeerList from "./components/BeerList";
+import Header from "./components/header";
+import BeerList from "./components/beerList";
 
 function App() {
   return (
     <>
       <Header />
       <div className="main-content-wrapper">
-        <BeerList />
+        <div className="container">
+          <BeerList />
+        </div>
       </div>
     </>
   );

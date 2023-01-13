@@ -4,10 +4,12 @@ import PropTypes from "prop-types";
 const BeerItem = ({ beer }: { beer: Beer }) => {
   return (
     <>
-      <h2>{beer.name}</h2>
-      <p>{beer.tagline}</p>
-      <img src={beer.image_url} alt={beer.name} />
-      <p>ABV: {beer.abv}</p>
+      <tr>
+        {/* <img src={beer.image_url} alt={beer.name} /> */}
+        <td>{beer.name}</td>
+        <td>{beer.tagline}</td>
+        <td>{beer.abv}</td>
+      </tr>
     </>
   );
 };

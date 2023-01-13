@@ -1,10 +1,11 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+
 const LoadingIndicator = () => {
   return (
-    <h3>
-      <div className="text-center">
-        <i v-if="showSpinner" className="fas fa-spinner fa-spin"></i>
-      </div>
-    </h3>
+    <div className="text-center text-success">
+      <FontAwesomeIcon className="fa-spin fa-xl" icon={faSpinner} />
+    </div>
   );
 };
 
