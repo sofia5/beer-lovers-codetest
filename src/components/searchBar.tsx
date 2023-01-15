@@ -6,7 +6,10 @@ import { faSearch } from "@fortawesome/free-solid-svg-icons";
 const SearchBar = ({ items }: { items: any[] }) => {
   return (
     <>
-      <InputGroup className="mb-3">
+      <InputGroup
+        className="mb-3"
+        onChange={(e) => console.log((e.target as HTMLInputElement).value)}
+      >
         <InputGroup.Text>
           <FontAwesomeIcon className="text-success" icon={faSearch} />
         </InputGroup.Text>
