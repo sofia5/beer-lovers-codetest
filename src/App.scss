@@ -6,21 +6,3 @@
 body {
   background-color: #0D0F12;
 }
-
-.card-body {
-  position: relative;
-}
-
-.table-head {
-  border-bottom: 1px grey;
-}
-
-.filter-icon{
-  color: grey;
-}
-
-.filter-icon {
-  & :hover {
-    color: black;
-  }
-}

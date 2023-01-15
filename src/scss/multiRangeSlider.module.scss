@@ -11,45 +11,45 @@
 
 .slider {
   position: relative;
-  width: 200px;
+  width: 50%;
 }
 
-.slider__track,
-.slider__range,
-.slider__left-value,
-.slider__right-value {
+.slider-track,
+.slider-range,
+.slider-left-value,
+.slider-right-value {
   position: absolute;
 }
 
-.slider__track,
-.slider__range {
+.slider-track,
+.slider-range {
   border-radius: 3px;
   height: 5px;
 }
 
-.slider__track {
+.slider-track {
   background-color: #ced4da;
   width: 100%;
   z-index: 1;
 }
 
-.slider__range {
+.slider-range {
   background-color: $success;
   z-index: 2;
 }
 
-.slider__left-value,
-.slider__right-value {
+.slider-left-value,
+.slider-right-value {
   color: #dee2e6;
   font-size: 12px;
   margin-top: 20px;
 }
 
-.slider__left-value {
+.slider-left-value {
   left: 6px;
 }
 
-.slider__right-value {
+.slider-right-value {
   right: -4px;
 }
 
@@ -64,7 +64,7 @@
   pointer-events: none;
   position: absolute;
   height: 0;
-  width: 200px;
+  width: 47%;
   outline: none;
 }
 
