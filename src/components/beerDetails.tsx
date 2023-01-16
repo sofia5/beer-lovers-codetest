@@ -1,9 +1,9 @@
 import { useParams } from "react-router-dom";
-import NotFound from "./notFound";
+import NotFound from "./NotFound";
 import useBeers from "../hooks/useBeers";
-import LoadingSpinner from "./loadingSpinner";
+import LoadingSpinner from "./LoadingSpinner";
 import styles from "../scss/beerDetails.module.scss";
-import BackButton from "./backButton";
+import BackButton from "./BackButton";
 
 const BeerItem = () => {
   let { id } = useParams<"id">();
@@ -11,13 +11,9 @@ const BeerItem = () => {
 
   if (!id) {
     return <NotFound />;
-  }
-
-  if (loading) {
+  } else if (loading) {
     return <LoadingSpinner />;
-  }
-
-  if (error) {
+  } else if (error) {
     return <div>{error}</div>;
   }
 

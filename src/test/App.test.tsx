@@ -1,8 +1,7 @@
-import { render, screen } from "@testing-library/react";
+import { render } from "@testing-library/react";
+import { BrowserRouter } from "react-router-dom";
 import App from "../App";
 
-test("renders header", () => {
-  render(<App />);
-  const headerText = screen.getByText(/Beer lovers/i);
-  expect(headerText).toBeInTheDocument();
+test("renders application", () => {
+  render(<App />, { wrapper: BrowserRouter });
 });

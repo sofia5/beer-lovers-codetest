@@ -1,11 +1,11 @@
 import useBeers from "../hooks/useBeers";
-import BeerItem from "./beerItem";
-import LoadingSpinner from "./loadingSpinner";
-import SearchBar from "./searchBar";
+import BeerItem from "./BeerItem";
+import LoadingSpinner from "./LoadingSpinner";
+import SearchBar from "./SearchBar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFilter } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
-import MultiRangeSlider from "./multiRangeSlider";
+import MultiRangeSlider from "./MultiRangeSlider";
 import styles from "../scss/beerList.module.scss";
 import { Beer, BeerFilter } from "../types/interfaces";
 import { useSearchParams } from "react-router-dom";

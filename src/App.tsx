@@ -1,9 +1,9 @@
 import { Routes, Route } from "react-router-dom";
 import "./scss/App.scss";
-import Header from "./components/header";
-import BeerList from "./components/beerList";
-import BeerDetails from "./components/beerDetails";
-import NotFound from "./components/notFound";
+import Header from "./components/Header";
+import BeerList from "./components/BeerList";
+import BeerDetails from "./components/BeerDetails";
+import NotFound from "./components/NotFound";
 
 const App = () => {
   return (
