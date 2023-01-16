@@ -101,6 +101,7 @@ const BeerList = () => {
             </div>
             <div className="col-11 col-lg-6">
               <SearchBar
+                initialValue={filter.searchTerm}
                 handleChange={(event) =>
                   setFilter({
                     ...filter,

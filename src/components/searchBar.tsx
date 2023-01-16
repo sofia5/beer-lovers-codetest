@@ -4,17 +4,21 @@ import { FormEvent } from "react";
 import PropTypes from "prop-types";
 
 const SearchBar = ({
+  initialValue,
   handleChange,
 }: {
+  initialValue: string;
   handleChange: (event: FormEvent<HTMLDivElement>) => void;
 }) => {
   return (
     <>
-      <div className="mb-3 input-group" onChange={handleChange}>
+      <div className="mb-3 input-group">
         <div className="input-group-text">
           <FontAwesomeIcon className="text-success" icon={faSearch} />
         </div>
         <input
+          value={initialValue}
+          onChange={handleChange}
           placeholder="Search"
           aria-label="Search"
           className="form-control"
