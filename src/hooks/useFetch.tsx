@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Method } from "../types/types";
+import { RequestMethod } from "../types/types";
 
 interface FetchData<T> {
   data?: T;
@@ -9,7 +9,7 @@ interface FetchData<T> {
 
 const useFetch = <T,>(
   url: string,
-  method: Method,
+  method: RequestMethod,
   headers?: Headers
 ): FetchData<T> => {
   const [data, setData] = useState<T>();

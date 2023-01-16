@@ -1,26 +1,37 @@
 import PropTypes from "prop-types";
-import { Form, InputGroup } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import { useEffect, useState } from "react";
 
-const SearchBar = ({ items }: { items: any[] }) => {
+const SearchBar = ({ onChange }: { onChange: (value: string) => void }) => {
+  const [searchValue, setSearchValue] = useState<string>("");
+
+  // Get search value on change
+  useEffect(() => onChange(searchValue), [searchValue, onChange]);
+
   return (
     <>
-      <InputGroup
-        className="mb-3"
-        onChange={(e) => console.log((e.target as HTMLInputElement).value)}
+      <div
+        className="mb-3 input-group"
+        onChange={(event) =>
+          setSearchValue((event.target as HTMLInputElement).value)
+        }
       >
-        <InputGroup.Text>
+        <div className="input-group-text">
           <FontAwesomeIcon className="text-success" icon={faSearch} />
-        </InputGroup.Text>
-        <Form.Control placeholder="Search" aria-label="Search" />
-      </InputGroup>
+        </div>
+        <input
+          placeholder="Search"
+          aria-label="Search"
+          className="form-control"
+        />
+      </div>
     </>
   );
 };
 
 SearchBar.propTypes = {
-  items: PropTypes.arrayOf(PropTypes.any).isRequired,
+  onChange: PropTypes.func.isRequired,
 };
 
 export default SearchBar;

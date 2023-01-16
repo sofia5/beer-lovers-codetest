@@ -1,8 +1,12 @@
 @import "~bootstrap/scss/bootstrap";
+body {
+  background-color: #0D0F12;
+}
+
 .main-content-wrapper {
     margin-top: 5rem;
 }
 
-body {
-  background-color: #0D0F12;
+.full-page {
+  height: 90vh;
 }

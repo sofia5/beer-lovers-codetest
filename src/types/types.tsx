@@ -1,1 +1,1 @@
-export type Method = "GET" | "PUT" | "POST" | "DELETE";
+export type RequestMethod = "GET" | "PUT" | "POST" | "DELETE";

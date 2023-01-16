@@ -1,7 +1,6 @@
 import useBeers from "../hooks/useBeers";
 import BeerItem from "./beerItem";
 import LoadingSpinner from "./loadingSpinner";
-import { Table, Card } from "react-bootstrap";
 import SearchBar from "./searchBar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFilter } from "@fortawesome/free-solid-svg-icons";
@@ -51,64 +50,63 @@ const BeerList = () => {
   // const filteredBeerList = abvsFilter;
 
   return (
-    <>
-      <Card border="dark" bg="dark">
-        <Card.Body className="p-0">
-          <div className="m-5">
-            <div className="row d-flex justify-content-between align-items-baseline">
-              <div className="col-1 filter-wrapper">
-                <FontAwesomeIcon
-                  className={`fa-xl ${styles["filter-icon"]} ${
-                    filterOpen ? "text-success" : ""
-                  }`}
-                  icon={faFilter}
-                  onClick={() => setFilterOpen(!filterOpen)}
-                />
-              </div>
-              <div className="col-11 col-lg-6">
-                <SearchBar items={beers}></SearchBar>
-              </div>
+    <div className="card bg-dark border-dark">
+      <div className="p-0 card-body">
+        <div className="m-5">
+          <div className="row d-flex justify-content-between align-items-baseline">
+            <div className="col-1 filter-wrapper">
+              <FontAwesomeIcon
+                className={`fa-xl ${styles["filter-icon"]} ${
+                  filterOpen ? "text-success" : ""
+                }`}
+                icon={faFilter}
+                onClick={() => setFilterOpen(!filterOpen)}
+              />
             </div>
-            {filterOpen && (
-              <div className="row mt-3">
-                <h4 className="text-success">Filters</h4>
-                <MultiRangeSlider
-                  min={Math.min(...abvs)}
-                  max={Math.max(...abvs)}
-                  onChange={
-                    // ({ min, max }) => console.log(`min = ${min}, max = ${max}`)
-                    ({ min, max }) => setNewAbvsFilter(min, max)
-                  }
-                  label="Alcohol by volume"
-                />
-              </div>
-            )}
-            <div className="row mt-5">
-              <div className="w-100">
-                <Table hover variant="dark" className="mb-0 p-3">
-                  <thead className={styles["table-head"]}>
-                    <tr className="text-uppercase text-success">
-                      <th>Name</th>
-                      <th>Tagline</th>
-                      <th>Alcohol by volume</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {filteredBeerList.length > 0 &&
-                      filteredBeerList.map((b) => (
-                        <BeerItem key={b.id} beer={b} />
-                      ))}
-                    {/* {filteredBeerList.length === 0 && (
-                      <p>No beers available with this filter</p>
-                    )} */}
-                  </tbody>
-                </Table>
-              </div>
+            <div className="col-11 col-lg-6">
+              <SearchBar onChange={(value) => console.log(value)}></SearchBar>
             </div>
           </div>
-        </Card.Body>
-      </Card>
-    </>
+          {filterOpen && (
+            <div className="row mt-3">
+              <h4 className="text-success">Filters</h4>
+              <MultiRangeSlider
+                min={Math.min(...abvs)}
+                max={Math.max(...abvs)}
+                onChange={
+                  // ({ min, max }) => console.log(`min = ${min}, max = ${max}`)
+                  ({ min, max }) => setNewAbvsFilter(min, max)
+                }
+                label="Alcohol by volume"
+              />
+            </div>
+          )}
+          <div className="row mt-5">
+            <div className="w-100">
+              <table className="mb-0 p-3 table table-dark table-hover">
+                <thead className={styles["table-head"]}>
+                  <tr className="text-uppercase text-success">
+                    <th>Name</th>
+                    <th>Tagline</th>
+                    <th>First brewed</th>
+                    <th>Alcohol by volume</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredBeerList.length > 0 &&
+                    filteredBeerList.map((b) => (
+                      <BeerItem key={b.id} beer={b} />
+                    ))}
+                  {/* {filteredBeerList.length === 0 && (
+                      <p>No beers available with this filter</p>
+                    )} */}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 

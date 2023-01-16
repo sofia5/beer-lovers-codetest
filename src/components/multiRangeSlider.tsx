@@ -56,7 +56,7 @@ const MultiRangeSlider = ({
   }, [minVal, maxVal, onChange]);
 
   return (
-    <div className="container">
+    <div className="container mb-5">
       <label className="text-uppercase text-white mt-4 mb-4">{label}</label>
       <div>
         <input
