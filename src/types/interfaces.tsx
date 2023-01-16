@@ -14,3 +14,9 @@ export interface Beer {
   food_pairing: string[];
   first_brewed: string;
 }
+
+export interface BeerFilter {
+  searchTerm: string;
+  abv_min?: number;
+  abv_max?: number;
+}

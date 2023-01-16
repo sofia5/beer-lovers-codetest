@@ -7,23 +7,74 @@ import { faFilter } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
 import MultiRangeSlider from "./multiRangeSlider";
 import styles from "../scss/beerList.module.scss";
-import { Beer } from "../types/interfaces";
+import { Beer, BeerFilter } from "../types/interfaces";
+import { useSearchParams } from "react-router-dom";
 
 const BeerList = () => {
+  let [searchParams, setSearchParams] = useSearchParams();
+
+  const emptyFilter = {
+    searchTerm: searchParams.get("searchTerm") ?? "",
+    abv_min: Number(searchParams.get("abv_min")) || undefined,
+    abv_max: Number(searchParams.get("abv_max")) || undefined,
+  };
+
   const [filterOpen, setFilterOpen] = useState(false);
   const [filteredBeerList, setFilteredBeerList] = useState<Beer[]>([]);
-  const [abvsFilter, setAbvsFilter] = useState<Beer[]>([]);
+  const [filter, setFilter] = useState<BeerFilter>(emptyFilter);
+
   const { beers, loading, error } = useBeers();
 
   beers.sort((a, b) => {
     return b.abv - a.abv;
   });
 
-  // Initialize abvsFilter to the original list of beers
+  // Set filteredList
   useEffect(() => {
-    setFilteredBeerList(beers);
-    setAbvsFilter(beers);
-  }, [beers]);
+    let filteredBeers = [...beers];
+
+    filteredBeers = filteredBeers.filter(
+      (fb) =>
+        fb.name.toLowerCase().includes(filter.searchTerm.toLowerCase()) ||
+        fb.tagline.toLowerCase().includes(filter.searchTerm.toLowerCase())
+
+      // Also possible to match on the text on the item's detail pages
+
+      // fb.description
+      //   .toLowerCase()
+      //   .includes(filter.searchTerm.toLowerCase()) ||
+      // fb.food_pairing
+      //   .join()
+      //   .toLowerCase()
+      //   .includes(filter.searchTerm.toLowerCase())
+    );
+
+    const params = new URLSearchParams();
+
+    if (filter.searchTerm) {
+      params.append("searchTerm", filter.searchTerm);
+    }
+
+    if (filter.abv_min) {
+      filteredBeers = filteredBeers.filter(
+        (fb) => filter.abv_min && fb.abv >= filter.abv_min
+      );
+
+      params.append("abv_min", filter.abv_min.toString());
+    }
+
+    if (filter.abv_max) {
+      filteredBeers = filteredBeers.filter(
+        (fb) => filter.abv_max && fb.abv <= filter.abv_max
+      );
+
+      params.append("abv_max", filter.abv_max.toString());
+    }
+
+    setSearchParams(params);
+
+    setFilteredBeerList(filteredBeers);
+  }, [filter, beers, setSearchParams]);
 
   if (loading) {
     return <LoadingSpinner />;
@@ -32,22 +83,7 @@ const BeerList = () => {
     return <div>{error}</div>;
   }
 
-  const setNewAbvsFilter = (min: number, max: number) => {
-    console.log(`min = ${min}, max = ${max}`);
-    // let p2 = Object.assign({}, beers);
-    // console.log(p2);
-    // setFilteredBeerList(p2.filter((b) => min <= b.abv && b.abv <= max));
-
-    // setAbvsFilter(
-    //   Math.min(...abvs) < min || max < Math.max(...abvs)
-    //     ? p2.filter((b) => min <= b.abv && b.abv <= max)
-    //     : p2
-    // );
-  };
-
   const abvs = beers.map((b) => b.abv);
-
-  // const filteredBeerList = abvsFilter;
 
   return (
     <div className="card bg-dark border-dark">
@@ -64,7 +100,14 @@ const BeerList = () => {
               />
             </div>
             <div className="col-11 col-lg-6">
-              <SearchBar onChange={(value) => console.log(value)}></SearchBar>
+              <SearchBar
+                handleChange={(event) =>
+                  setFilter({
+                    ...filter,
+                    searchTerm: (event.target as HTMLInputElement).value,
+                  })
+                }
+              ></SearchBar>
             </div>
           </div>
           {filterOpen && (
@@ -73,9 +116,20 @@ const BeerList = () => {
               <MultiRangeSlider
                 min={Math.min(...abvs)}
                 max={Math.max(...abvs)}
-                onChange={
-                  // ({ min, max }) => console.log(`min = ${min}, max = ${max}`)
-                  ({ min, max }) => setNewAbvsFilter(min, max)
+                handleChange={(event, minOrMax) =>
+                  minOrMax === "min"
+                    ? setFilter({
+                        ...filter,
+                        abv_min: parseInt(
+                          (event.target as HTMLInputElement).value
+                        ),
+                      })
+                    : setFilter({
+                        ...filter,
+                        abv_max: parseInt(
+                          (event.target as HTMLInputElement).value
+                        ),
+                      })
                 }
                 label="Alcohol by volume"
               />
@@ -97,11 +151,14 @@ const BeerList = () => {
                     filteredBeerList.map((b) => (
                       <BeerItem key={b.id} beer={b} />
                     ))}
-                  {/* {filteredBeerList.length === 0 && (
-                      <p>No beers available with this filter</p>
-                    )} */}
                 </tbody>
               </table>
+
+              {filteredBeerList.length === 0 && (
+                <p className="mt-4 text-white">
+                  No beers available with this filter
+                </p>
+              )}
             </div>
           </div>
         </div>

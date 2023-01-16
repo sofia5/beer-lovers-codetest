@@ -6,6 +6,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 - More test cases could be added.
 - Add sorting for each column in the table, and scrolling or pages for the content.
+- Save search and filter if navigating to and back from beerDetails
 
 Note: This project was built with some lack of React experience, so it can probably be better structured and use React features more efficiently.
 
