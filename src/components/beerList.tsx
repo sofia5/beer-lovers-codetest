@@ -39,19 +39,18 @@ const BeerList = () => {
   useEffect(() => {
     let filteredBeers = [...beers];
 
-    // Possible to search within fetched data - I decided to search among the entire data set
-    // filteredBeers = filteredBeers.filter(
-    //   (fb) =>
-    //     fb.name.toLowerCase().includes(filter.searchTerm.toLowerCase()) ||
-    //     fb.tagline.toLowerCase().includes(filter.searchTerm.toLowerCase())
-    // fb.description
-    //   .toLowerCase()
-    //   .includes(filter.searchTerm.toLowerCase()) ||
-    // fb.food_pairing
-    //   .join()
-    //   .toLowerCase()
-    //   .includes(filter.searchTerm.toLowerCase())
-    // );
+    filteredBeers = filteredBeers.filter(
+      (fb) =>
+        fb.name.toLowerCase().includes(filter.searchTerm.toLowerCase()) ||
+        fb.tagline.toLowerCase().includes(filter.searchTerm.toLowerCase())
+      // fb.description
+      //   .toLowerCase()
+      //   .includes(filter.searchTerm.toLowerCase()) ||
+      // fb.food_pairing
+      //   .join()
+      //   .toLowerCase()
+      //   .includes(filter.searchTerm.toLowerCase())
+    );
 
     const params = new URLSearchParams();
 

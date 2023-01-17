@@ -70,7 +70,7 @@ const MultiRangeSlider = ({
             minValRef.current = value;
             handleChange(event, "min");
           }}
-          className={`${styles.thumb} ${styles["thumb--left"]}`}
+          className={`${styles.thumb} ${styles["thumb-left"]}`}
           style={{ zIndex: 5 }}
         />
 

@@ -4,7 +4,9 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## Comments
 
-- The search and filtering, searches/filters the whole beer dataset (sending new requests with search parameters).
+- The filtering, filters the whole beer dataset (sending new requests with search parameters).
+
+- The search, searches through fetched data. It's possible to search the entire data set, but to my knowledge only certain parts like beer_name (and not e.g. beer_description), and I'm not sure how to search within multiple fields at once (match against both e.g. beer_name and beer_yeast)
 
 - The API does not contain meta data such as "total number of pages" or "total number of beers", therefore it's difficult to know the number of pages to include. To have some kind of pagination I decided to fetch (at most) 80 items and divide them in to pages of 25 items. I know this isn't the optimal solution.
 
@@ -19,6 +21,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 - BeerList.tsx can probably be improved in terms of methods, fetching etc., I'm not sure if I'm using the best strategies.
 - Add more details to the item detail page
 - Currently many requests are sent from the multiRangeSlider, and ideally the event would only fire after drag. OnChange on a range element seems to normally trigger after release, but for some reason it's not for me.
+- I can reuse components a bit more, e.g. the labels with class="text-uppercase text-success" are used in several places.
 
 Note: This project was built with some lack of React experience, so it can probably be better structured and use React features more efficiently.
 
