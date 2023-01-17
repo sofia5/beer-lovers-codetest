@@ -1,9 +1,10 @@
 import { useParams } from "react-router-dom";
 import NotFound from "./NotFound";
-import useBeers from "../hooks/useBeers";
+import useBeer from "../hooks/useBeer";
 import LoadingSpinner from "./LoadingSpinner";
-import styles from "../scss/beerDetails.module.scss";
+import styles from "../scss/BeerDetails.module.scss";
 import BackButton from "./BackButton";
+import BeerColor from "./BeerColor";
 
 const BeerItem = () => {
   let { id } = useParams<"id">();
@@ -12,16 +13,12 @@ const BeerItem = () => {
     throw new Error("ID should be set here");
   }
 
-  const { beers, loading, error } = useBeers({
-    searchParams: new URLSearchParams({ ids: id }),
-  });
-
-  const beer = beers[0];
+  const { beer, loading, error } = useBeer({ id });
 
   if (!id) {
     return <NotFound />;
   } else if (loading) {
-    return <LoadingSpinner />;
+    return <LoadingSpinner fullPage={true} />;
   } else if (error) {
     return <div>{error}</div>;
   }
@@ -46,11 +43,36 @@ const BeerItem = () => {
               <h5>
                 <em>{beer.tagline}</em>
               </h5>
-
               <label className="text-uppercase text-success mt-5">
                 <strong>Alcohol by volume</strong>
               </label>
-              <p>{beer.abv}</p>
+              <div className="col-12 col-md-8 mt-2 mb-3">
+                <div className="progress">
+                  <div
+                    className="progress-bar bg-success"
+                    role="progressbar"
+                    style={{ width: `${beer.abv}%` }}
+                    aria-valuenow={beer.abv}
+                    aria-valuemin={0}
+                    aria-valuemax={100}
+                  >
+                    <small>{beer.abv}%</small>
+                  </div>
+                </div>
+                <div className="d-flex justify-content-between">
+                  <small>{0}%</small>
+                  <small>{100}%</small>
+                </div>
+              </div>
+
+              {beer.ebc && (
+                <>
+                  <label className="text-uppercase text-success">
+                    <strong>Color</strong>
+                  </label>
+                  <BeerColor ebc={beer.ebc} />
+                </>
+              )}
 
               <label className="text-uppercase text-success">
                 <strong>First brewed</strong>
@@ -66,7 +88,7 @@ const BeerItem = () => {
                 <strong>Food pairing</strong>
               </label>
               <ul>
-                {beer.food_pairing.map((pairing, index) => (
+                {beer.food_pairing?.map((pairing, index) => (
                   <li key={index}>{pairing}</li>
                 ))}
               </ul>

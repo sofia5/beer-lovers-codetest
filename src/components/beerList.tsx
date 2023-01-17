@@ -6,10 +6,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFilter } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
 import MultiRangeSlider from "./MultiRangeSlider";
-import styles from "../scss/beerList.module.scss";
+import styles from "../scss/BeerList.module.scss";
 import { Beer, BeerFilter } from "../types/interfaces";
 import { useSearchParams } from "react-router-dom";
-import PageItem from "./PageItem";
+import Pagination from "./Pagination";
 
 const BeerList = () => {
   let [searchParams, setSearchParams] = useSearchParams();
@@ -24,7 +24,7 @@ const BeerList = () => {
   const [filteredBeerList, setFilteredBeerList] = useState<Beer[]>([]);
   const [filter, setFilter] = useState<BeerFilter>(emptyFilter);
 
-  const { beers, loading, error } = useBeers({});
+  const { beers, loading, error } = useBeers({ searchParams });
 
   beers.sort((a, b) => {
     return b.abv - a.abv;
@@ -77,14 +77,9 @@ const BeerList = () => {
     setFilteredBeerList(filteredBeers);
   }, [filter, beers, setSearchParams]);
 
-  if (loading) {
-    return <LoadingSpinner />;
-  }
   if (error) {
     return <div>{error}</div>;
   }
-
-  const abvs = beers.map((b) => b.abv);
 
   return (
     <div className="card bg-dark border-dark">
@@ -116,8 +111,9 @@ const BeerList = () => {
             <div className="row mt-3">
               <h4 className="text-success">Filters</h4>
               <MultiRangeSlider
-                min={Math.min(...abvs)}
-                max={Math.max(...abvs)}
+                // max abv for existing beer: 67.5
+                min={0}
+                max={70}
                 handleChange={(event, minOrMax) =>
                   minOrMax === "min"
                     ? setFilter({
@@ -155,13 +151,12 @@ const BeerList = () => {
                     ))}
                 </tbody>
               </table>
-              {/* <nav aria-label="Page navigation">
-                <ul className="pagination justify-content-end">
-                  pages.map(p, index) => (<PageItem key="index" first="index === 0" last="index === pages.length - 1" index="index" onClick="changePage(index)"/>)
-                   *
-                </ul>
-              </nav> */}
-
+              {loading && (
+                <div className="mt-3">
+                  <LoadingSpinner fullPage={false} />
+                </div>
+              )}
+              {filteredBeerList.length > 0 && <Pagination pages={5} />}
               {filteredBeerList.length === 0 && (
                 <p className="mt-4 text-white">
                   No beers available with this filter

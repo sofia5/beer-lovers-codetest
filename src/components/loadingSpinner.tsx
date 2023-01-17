@@ -1,9 +1,13 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
-const LoadingIndicator = () => {
+const LoadingIndicator = ({ fullPage }: { fullPage: boolean }) => {
   return (
-    <div className="full-page d-flex align-items-center justify-content-center">
+    <div
+      className={`d-flex align-items-center justify-content-center ${
+        fullPage ? "full-page" : undefined
+      }`}
+    >
       <FontAwesomeIcon
         data-testid="loading-spinner"
         className="fa-spin fa-xl text-success"

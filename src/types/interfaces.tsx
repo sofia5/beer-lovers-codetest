@@ -10,6 +10,7 @@ export interface Beer {
   tagline: string;
   image_url: string;
   abv: number;
+  ebc: number;
   description: string;
   food_pairing: string[];
   first_brewed: string;

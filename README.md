@@ -2,6 +2,10 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Comments
+
+- The API does not contain meta data such as "total number of pages" or "total number of beers", therefore it's difficult to know the number of pages to include. Similarly, there's no information about the beer with the highest or lowest abv (so the max set for the range is based on the current existing highest abv in a beer which is 67.5%). It would be possible to fetch the entire list of beers, but the load time is likely to be high.
+
 ## Improvements
 
 - More test cases could be added.
