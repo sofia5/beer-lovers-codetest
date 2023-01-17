@@ -8,11 +8,12 @@ import { useEffect, useState } from "react";
 import MultiRangeSlider from "./MultiRangeSlider";
 import styles from "../scss/BeerList.module.scss";
 import { Beer, BeerFilter } from "../types/interfaces";
-import { useSearchParams } from "react-router-dom";
+import { useLocation, useSearchParams } from "react-router-dom";
 import Pagination from "./Pagination";
 
 const BeerList = () => {
-  let [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { hash } = useLocation();
 
   const emptyFilter = {
     searchTerm: searchParams.get("searchTerm") ?? "",
@@ -22,9 +23,13 @@ const BeerList = () => {
 
   const [filterOpen, setFilterOpen] = useState(false);
   const [filteredBeerList, setFilteredBeerList] = useState<Beer[]>([]);
+  const [pageData, setPageData] = useState<Beer[]>([]);
+  const [pageNumber, setPageNumber] = useState(1);
   const [filter, setFilter] = useState<BeerFilter>(emptyFilter);
 
   const { beers, loading, error } = useBeers({ searchParams });
+
+  const items_per_page = 25;
 
   beers.sort((a, b) => {
     return b.abv - a.abv;
@@ -34,21 +39,19 @@ const BeerList = () => {
   useEffect(() => {
     let filteredBeers = [...beers];
 
-    filteredBeers = filteredBeers.filter(
-      (fb) =>
-        fb.name.toLowerCase().includes(filter.searchTerm.toLowerCase()) ||
-        fb.tagline.toLowerCase().includes(filter.searchTerm.toLowerCase())
-
-      // Also possible to match on the text on the item's detail pages
-
-      // fb.description
-      //   .toLowerCase()
-      //   .includes(filter.searchTerm.toLowerCase()) ||
-      // fb.food_pairing
-      //   .join()
-      //   .toLowerCase()
-      //   .includes(filter.searchTerm.toLowerCase())
-    );
+    // Possible to search within fetched data - I decided to search among the entire data set
+    // filteredBeers = filteredBeers.filter(
+    //   (fb) =>
+    //     fb.name.toLowerCase().includes(filter.searchTerm.toLowerCase()) ||
+    //     fb.tagline.toLowerCase().includes(filter.searchTerm.toLowerCase())
+    // fb.description
+    //   .toLowerCase()
+    //   .includes(filter.searchTerm.toLowerCase()) ||
+    // fb.food_pairing
+    //   .join()
+    //   .toLowerCase()
+    //   .includes(filter.searchTerm.toLowerCase())
+    // );
 
     const params = new URLSearchParams();
 
@@ -76,6 +79,21 @@ const BeerList = () => {
 
     setFilteredBeerList(filteredBeers);
   }, [filter, beers, setSearchParams]);
+
+  //Set page data
+  useEffect(() => {
+    const page = [...filteredBeerList];
+
+    setPageNumber(hash ? parseInt(hash.split("-")[1]) : 1);
+
+    setPageData(
+      page.filter(
+        (p, index) =>
+          index > (pageNumber - 1) * items_per_page &&
+          index <= (pageNumber - 1) * items_per_page + items_per_page
+      )
+    );
+  }, [hash, filteredBeerList, pageNumber]);
 
   if (error) {
     return <div>{error}</div>;
@@ -111,9 +129,11 @@ const BeerList = () => {
             <div className="row mt-3">
               <h4 className="text-success">Filters</h4>
               <MultiRangeSlider
-                // max abv for existing beer: 67.5
                 min={0}
+                // max abv for existing beer: 67.5
                 max={70}
+                initialMin={filter.abv_gt ?? 0}
+                initialMax={filter.abv_lt ?? 70}
                 handleChange={(event, minOrMax) =>
                   minOrMax === "min"
                     ? setFilter({
@@ -146,9 +166,8 @@ const BeerList = () => {
                 </thead>
                 <tbody>
                   {filteredBeerList.length > 0 &&
-                    filteredBeerList.map((b) => (
-                      <BeerItem key={b.id} beer={b} />
-                    ))}
+                    !loading &&
+                    pageData.map((b) => <BeerItem key={b.id} beer={b} />)}
                 </tbody>
               </table>
               {loading && (
@@ -156,7 +175,12 @@ const BeerList = () => {
                   <LoadingSpinner fullPage={false} />
                 </div>
               )}
-              {filteredBeerList.length > 0 && <Pagination pages={5} />}
+              {Math.floor(filteredBeerList.length / items_per_page) >= 1 && (
+                <Pagination
+                  pages={Math.floor(filteredBeerList.length / items_per_page)}
+                  activePage={pageNumber}
+                />
+              )}
               {filteredBeerList.length === 0 && (
                 <p className="mt-4 text-white">
                   No beers available with this filter

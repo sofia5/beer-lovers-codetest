@@ -21,3 +21,8 @@ export interface BeerFilter {
   abv_gt?: number;
   abv_lt?: number;
 }
+
+export interface EbcBeerColor {
+  ebc_number: number;
+  color_code: string;
+}

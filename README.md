@@ -4,13 +4,21 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## Comments
 
-- The API does not contain meta data such as "total number of pages" or "total number of beers", therefore it's difficult to know the number of pages to include. Similarly, there's no information about the beer with the highest or lowest abv (so the max set for the range is based on the current existing highest abv in a beer which is 67.5%). It would be possible to fetch the entire list of beers, but the load time is likely to be high.
+- The search and filtering, searches/filters the whole beer dataset (sending new requests with search parameters).
+
+- The API does not contain meta data such as "total number of pages" or "total number of beers", therefore it's difficult to know the number of pages to include. To have some kind of pagination I decided to fetch (at most) 80 items and divide them in to pages of 25 items. I know this isn't the optimal solution.
+
+- Similarly, there's no information about the beer with the highest or lowest abv (so the max set for the filter range "Alcohol by volume" is based on the current existing highest abv in a beer which is 67.5%). It would be possible to fetch the entire list of beers, but the load time is likely to be high, and it would defeat the purpose of using the url requests like ?abv_gt="30" (?).
+
+- Since I used a table, which is quite condensed, I didn't see the purpose of including images in the table view.
 
 ## Improvements
 
-- More test cases could be added.
-- Add sorting for each column in the table, and scrolling or pages for the content.
-- Make multiRangeSlider keep value when reloading
+- More test cases could be added - I added a few to show the ideas I have regarding unit testing.
+- Add sorting for each column in the table
+- BeerList.tsx can probably be improved in terms of methods, fetching etc., I'm not sure if I'm using the best strategies.
+- Add more details to the item detail page
+- Currently many requests are sent from the multiRangeSlider, and ideally the event would only fire after drag. OnChange on a range element seems to normally trigger after release, but for some reason it's not for me.
 
 Note: This project was built with some lack of React experience, so it can probably be better structured and use React features more efficiently.
 

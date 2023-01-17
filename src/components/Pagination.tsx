@@ -1,30 +1,35 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 
-const Pagination = ({ pages }: { pages: number }) => {
-  const [activePage, setActivePage] = useState(1);
-
+const Pagination = ({
+  pages,
+  activePage,
+}: {
+  pages: number;
+  activePage: number;
+}) => {
   return (
     <nav className="mt-4" aria-label="Page navigation">
       <ul className="pagination justify-content-end">
         <li
-          className={`page-item ${activePage === 0 ? "disabled" : undefined}`}
+          className={`page-item ${activePage === 1 ? "disabled" : undefined}`}
         >
           <a
             className="page-link"
-            href={`#page-1`}
-            tabIndex={activePage === 0 ? -1 : undefined}
-            aria-disabled={activePage === 0}
-            onClick={() => setActivePage(activePage - 1)}
+            href={`#page-${activePage - 1}`}
+            tabIndex={activePage === 1 ? -1 : undefined}
+            aria-disabled={activePage === 1}
           >
             Previous
           </a>
         </li>
         {Array.from(Array(pages), (e, i) => (
-          <li key={i + 1} className="page-item">
+          <li key={i} className="page-item">
             <a
-              className={`page-link ${activePage === i ? "active" : undefined}`}
+              className={`page-link ${
+                activePage === i + 1 ? "active" : undefined
+              }`}
               href={`#page-${i + 1}`}
-              onClick={() => setActivePage(i)}
             >
               {i + 1}
             </a>
@@ -32,15 +37,14 @@ const Pagination = ({ pages }: { pages: number }) => {
         ))}
         <li
           className={`page-item ${
-            activePage === pages - 1 ? "disabled" : undefined
+            activePage === pages ? "disabled" : undefined
           }`}
         >
           <a
             className="page-link"
-            href={`#page-${pages}`}
-            tabIndex={activePage === pages - 1 ? -1 : undefined}
-            aria-disabled={activePage === pages - 1}
-            onClick={() => setActivePage(activePage + 1)}
+            href={`#page-${activePage + 1}`}
+            tabIndex={activePage === pages ? -1 : undefined}
+            aria-disabled={activePage === pages}
           >
             Next
           </a>

@@ -6,18 +6,22 @@ import { MinOrMax } from "../types/types";
 const MultiRangeSlider = ({
   min,
   max,
+  initialMin,
+  initialMax,
   handleChange,
   label,
 }: {
   min: number;
   max: number;
+  initialMin: number;
+  initialMax: number;
   handleChange: (event: FormEvent<HTMLDivElement>, minOrMax: MinOrMax) => void;
   label: string;
 }) => {
-  const [minVal, setMinVal] = useState(min);
-  const [maxVal, setMaxVal] = useState(max);
-  const minValRef = useRef(min);
-  const maxValRef = useRef(max);
+  const [minVal, setMinVal] = useState(initialMin);
+  const [maxVal, setMaxVal] = useState(initialMax);
+  const minValRef = useRef(initialMin);
+  const maxValRef = useRef(initialMax);
   const range = useRef(null);
 
   // Convert to percentage
@@ -98,6 +102,8 @@ const MultiRangeSlider = ({
 MultiRangeSlider.propTypes = {
   min: PropTypes.number.isRequired,
   max: PropTypes.number.isRequired,
+  initialMin: PropTypes.number.isRequired,
+  initialMax: PropTypes.number.isRequired,
   handleChange: PropTypes.func.isRequired,
 };
 
