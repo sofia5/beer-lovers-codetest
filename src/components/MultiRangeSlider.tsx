@@ -57,7 +57,9 @@ const MultiRangeSlider = ({
 
   return (
     <div className="container mb-5">
-      <label className="text-uppercase text-white mt-4 mb-4">{label}</label>
+      <label className="text-uppercase text-white mt-4 mb-4">
+        <strong>{label}</strong>
+      </label>
       <div>
         <input
           type="range"
