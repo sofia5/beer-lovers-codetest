@@ -42,7 +42,16 @@ const BeerList = () => {
     filteredBeers = filteredBeers.filter(
       (fb) =>
         fb.name.toLowerCase().includes(filter.searchTerm.toLowerCase()) ||
-        fb.tagline.toLowerCase().includes(filter.searchTerm.toLowerCase())
+        fb.tagline.toLowerCase().includes(filter.searchTerm.toLowerCase()) ||
+        fb.first_brewed
+          .toLowerCase()
+          .includes(filter.searchTerm.toLowerCase()) ||
+        fb.abv
+          .toString()
+          .toLowerCase()
+          .includes(filter.searchTerm.toLowerCase())
+
+      // Currently just filtering on parameters in table, but easy to add properties from detail page as well (just not as visible)
       // fb.description
       //   .toLowerCase()
       //   .includes(filter.searchTerm.toLowerCase()) ||
@@ -88,8 +97,8 @@ const BeerList = () => {
     setPageData(
       page.filter(
         (p, index) =>
-          index > (pageNumber - 1) * items_per_page &&
-          index <= (pageNumber - 1) * items_per_page + items_per_page
+          index >= (pageNumber - 1) * items_per_page &&
+          index < (pageNumber - 1) * items_per_page + items_per_page
       )
     );
   }, [hash, filteredBeerList, pageNumber]);
@@ -158,12 +167,12 @@ const BeerList = () => {
                 <thead className={styles["table-head"]}>
                   <tr className="text-uppercase text-success">
                     <th>Name</th>
-                    <th>Tagline</th>
                     <th>First brewed</th>
                     <th>Alcohol by volume</th>
+                    <th>Tagline</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody className={`${styles["beer-table-content"]}`}>
                   {filteredBeerList.length > 0 &&
                     !loading &&
                     pageData.map((b) => <BeerItem key={b.id} beer={b} />)}
@@ -176,11 +185,11 @@ const BeerList = () => {
               )}
               {Math.floor(filteredBeerList.length / items_per_page) >= 1 && (
                 <Pagination
-                  pages={Math.floor(filteredBeerList.length / items_per_page)}
+                  pages={Math.ceil(filteredBeerList.length / items_per_page)}
                   activePage={pageNumber}
                 />
               )}
-              {filteredBeerList.length === 0 && (
+              {filteredBeerList.length === 0 && !loading && (
                 <p className="mt-4 text-white">
                   No beers available with this filter
                 </p>

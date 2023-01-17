@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import BackButton from "../components/BackButton";
-import { BrowserRouter, MemoryRouter } from "react-router-dom";
+import { BrowserRouter } from "react-router-dom";
 
 describe("BackButton", () => {
   it("renders the button with the correct text and icon", () => {

@@ -4,6 +4,7 @@ import Header from "./components/Header";
 import BeerList from "./components/BeerList";
 import BeerDetails from "./components/BeerDetails";
 import NotFound from "./components/NotFound";
+import RandomizeBeer from "./components/RandomizeBeer";
 
 const App = () => {
   return (
@@ -13,6 +14,7 @@ const App = () => {
         <Routes>
           <Route path="/" element={<BeerList />} />
           <Route path="/:id" element={<BeerDetails />} />
+          <Route path="/random" element={<RandomizeBeer />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>

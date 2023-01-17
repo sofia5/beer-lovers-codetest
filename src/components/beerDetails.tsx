@@ -5,15 +5,43 @@ import LoadingSpinner from "./LoadingSpinner";
 import styles from "../scss/BeerDetails.module.scss";
 import BackButton from "./BackButton";
 import BeerColor from "./BeerColor";
+import dateFormatter from "../helpers/DateFormatter";
+import { useEffect, useState } from "react";
 
 const BeerItem = () => {
+  const [dateFirstBrewed, setDateFirstBrewed] = useState<Date>();
+  const [typeOfBeer, setTypeOfBeer] = useState<string>();
   let { id } = useParams<"id">();
 
   if (!id) {
     throw new Error("ID should be set here");
   }
 
-  const { beer, loading, error } = useBeer({ id });
+  const { beer, loading, error } = useBeer({ id, random: false });
+
+  useEffect(() => {
+    if (beer) {
+      const dateArrayFirstBrewed = beer.first_brewed.split("/");
+      setDateFirstBrewed(
+        dateArrayFirstBrewed.length === 1
+          ? new Date(parseInt(dateArrayFirstBrewed[0]), 1)
+          : new Date(
+              parseInt(dateArrayFirstBrewed[1]),
+              parseInt(dateArrayFirstBrewed[0]) - 1
+            )
+      );
+
+      if (beer.ingredients.yeast) {
+        setTypeOfBeer(
+          beer.ingredients.yeast.toLowerCase().includes("lager")
+            ? "Lager"
+            : beer.ingredients.yeast.toLowerCase().includes("ale")
+            ? "Ale"
+            : "Other"
+        );
+      }
+    }
+  }, [beer]);
 
   if (!id) {
     return <NotFound />;
@@ -74,10 +102,23 @@ const BeerItem = () => {
               </>
             )}
 
-            <label className="text-uppercase text-success">
-              <strong>First brewed</strong>
-            </label>
-            <p>{beer.first_brewed}</p>
+            {dateFirstBrewed && (
+              <>
+                <label className="text-uppercase text-success">
+                  <strong>First brewed</strong>
+                </label>
+                <p>{dateFormatter.format(dateFirstBrewed)}</p>
+              </>
+            )}
+
+            {typeOfBeer && (
+              <>
+                <label className="text-uppercase text-success">
+                  <strong>Type of beer</strong>
+                </label>
+                <p>{typeOfBeer}</p>
+              </>
+            )}
 
             <label className="text-uppercase text-success">
               <strong>Description</strong>

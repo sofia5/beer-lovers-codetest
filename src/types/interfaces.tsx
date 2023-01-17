@@ -14,6 +14,9 @@ export interface Beer {
   description: string;
   food_pairing: string[];
   first_brewed: string;
+  ingredients: {
+    yeast: string;
+  };
 }
 
 export interface BeerFilter {

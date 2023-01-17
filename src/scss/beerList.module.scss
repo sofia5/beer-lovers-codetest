@@ -10,8 +10,11 @@
   color: grey;
 }
 
-.filter-icon {
-  & :hover {
-    color: black;
-  }
+.filter-icon:hover {
+    color: rgb(182, 182, 182);
+    cursor: pointer;
+}
+
+.beer-table-content:hover {
+  cursor: pointer;
 }

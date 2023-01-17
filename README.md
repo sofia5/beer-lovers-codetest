@@ -1,6 +1,6 @@
 # Overview
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app) and uses the [Punk API](https://punkapi.com/documentation/v2).
 
 ## Comments
 
@@ -20,8 +20,11 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 - Add sorting for each column in the table
 - BeerList.tsx can probably be improved in terms of methods, fetching etc., I'm not sure if I'm using the best strategies.
 - Add more details to the item detail page
-- Currently many requests are sent from the multiRangeSlider, and ideally the event would only fire after drag. OnChange on a range element seems to normally trigger after release, but for some reason it's not for me.
+- Currently many requests are sent from the multiRangeSlider, and ideally the event would only fire after drag. OnChange on a range input element seems to normally trigger after release, but for some reason it's not for me. Another option for my current design (if the event handling isn't improved) would be to add a search button and fire the event on click.
 - I can reuse components a bit more, e.g. the labels with class="text-uppercase text-success" are used in several places.
+- Some elements can be enhanced (like making the search bar and pagination in dark mode and make the ABV progress bar on the detail page prettier)
+- Randomize beers can probably be nicer, but I wasn't sure how to trigger a react hook (useBeers) on click.
+- Add filters, e.g. type of beer (lager, ale, other), date first brewed
 
 Note: This project was built with some lack of React experience, so it can probably be better structured and use React features more efficiently.
 
