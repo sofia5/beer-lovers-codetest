@@ -17,6 +17,6 @@ export interface Beer {
 
 export interface BeerFilter {
   searchTerm: string;
-  abv_min?: number;
-  abv_max?: number;
+  abv_gt?: number;
+  abv_lt?: number;
 }

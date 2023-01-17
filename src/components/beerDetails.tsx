@@ -7,7 +7,16 @@ import BackButton from "./BackButton";
 
 const BeerItem = () => {
   let { id } = useParams<"id">();
-  const { beers, loading, error } = useBeers();
+
+  if (!id) {
+    throw new Error("ID should be set here");
+  }
+
+  const { beers, loading, error } = useBeers({
+    searchParams: new URLSearchParams({ ids: id }),
+  });
+
+  const beer = beers[0];
 
   if (!id) {
     return <NotFound />;
@@ -16,8 +25,6 @@ const BeerItem = () => {
   } else if (error) {
     return <div>{error}</div>;
   }
-
-  const beer = beers.find((b) => b.id.toString() === id);
 
   return (
     <>

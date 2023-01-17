@@ -11,8 +11,6 @@ const MultiRangeSlider = ({
 }: {
   min: number;
   max: number;
-  initialMin?: number;
-  initialMax?: number;
   handleChange: (event: FormEvent<HTMLDivElement>, minOrMax: MinOrMax) => void;
   label: string;
 }) => {

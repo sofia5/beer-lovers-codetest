@@ -9,21 +9,22 @@ import MultiRangeSlider from "./MultiRangeSlider";
 import styles from "../scss/beerList.module.scss";
 import { Beer, BeerFilter } from "../types/interfaces";
 import { useSearchParams } from "react-router-dom";
+import PageItem from "./PageItem";
 
 const BeerList = () => {
   let [searchParams, setSearchParams] = useSearchParams();
 
   const emptyFilter = {
     searchTerm: searchParams.get("searchTerm") ?? "",
-    abv_min: Number(searchParams.get("abv_min")) || undefined,
-    abv_max: Number(searchParams.get("abv_max")) || undefined,
+    abv_gt: Number(searchParams.get("abv_gt")) || undefined,
+    abv_lt: Number(searchParams.get("abv_lt")) || undefined,
   };
 
   const [filterOpen, setFilterOpen] = useState(false);
   const [filteredBeerList, setFilteredBeerList] = useState<Beer[]>([]);
   const [filter, setFilter] = useState<BeerFilter>(emptyFilter);
 
-  const { beers, loading, error } = useBeers();
+  const { beers, loading, error } = useBeers({});
 
   beers.sort((a, b) => {
     return b.abv - a.abv;
@@ -55,20 +56,20 @@ const BeerList = () => {
       params.append("searchTerm", filter.searchTerm);
     }
 
-    if (filter.abv_min) {
+    if (filter.abv_gt) {
       filteredBeers = filteredBeers.filter(
-        (fb) => filter.abv_min && fb.abv >= filter.abv_min
+        (fb) => filter.abv_gt && fb.abv >= filter.abv_gt
       );
 
-      params.append("abv_min", filter.abv_min.toString());
+      params.append("abv_gt", filter.abv_gt.toString());
     }
 
-    if (filter.abv_max) {
+    if (filter.abv_lt) {
       filteredBeers = filteredBeers.filter(
-        (fb) => filter.abv_max && fb.abv <= filter.abv_max
+        (fb) => filter.abv_lt && fb.abv <= filter.abv_lt
       );
 
-      params.append("abv_max", filter.abv_max.toString());
+      params.append("abv_lt", filter.abv_lt.toString());
     }
 
     setSearchParams(params);
@@ -121,13 +122,13 @@ const BeerList = () => {
                   minOrMax === "min"
                     ? setFilter({
                         ...filter,
-                        abv_min: parseInt(
+                        abv_gt: parseInt(
                           (event.target as HTMLInputElement).value
                         ),
                       })
                     : setFilter({
                         ...filter,
-                        abv_max: parseInt(
+                        abv_lt: parseInt(
                           (event.target as HTMLInputElement).value
                         ),
                       })
@@ -154,6 +155,12 @@ const BeerList = () => {
                     ))}
                 </tbody>
               </table>
+              {/* <nav aria-label="Page navigation">
+                <ul className="pagination justify-content-end">
+                  pages.map(p, index) => (<PageItem key="index" first="index === 0" last="index === pages.length - 1" index="index" onClick="changePage(index)"/>)
+                   *
+                </ul>
+              </nav> */}
 
               {filteredBeerList.length === 0 && (
                 <p className="mt-4 text-white">
