@@ -13,8 +13,8 @@ const Header = () => {
         </Link>
         <Link className="col-auto" to="/random">
           <button className="btn btn-success">
-            <FontAwesomeIcon className="fa-lg me-2" icon={faShuffle} />I feel
-            lucky
+            <FontAwesomeIcon className="fa-lg me-2" icon={faShuffle} />
+            Surprise me
           </button>
         </Link>
       </div>

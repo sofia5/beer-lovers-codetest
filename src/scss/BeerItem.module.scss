@@ -1,3 +1,7 @@
-.beer-tagline {
+.beer-tagline, .beer-first-brewed {
   color: grey;
+
+  &:hover {
+    color: white;
+  }
 }

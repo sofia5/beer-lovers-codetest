@@ -28,11 +28,12 @@ const BeerItem = ({ beer }: { beer: Beer }) => {
   return (
     <tr onClick={() => redirect(beer.id)}>
       <td>{beer.name}</td>
-
-      <td>{dateFormatter.format(dateFirstBrewed)}</td>
       <td>{beer.abv}%</td>
-      <td>
-        <em className={styles["beer-tagline"]}>{beer.tagline}</em>
+      <td className={styles["beer-first-brewed"]}>
+        {dateFormatter.format(dateFirstBrewed)}
+      </td>
+      <td className={styles["beer-tagline"]}>
+        <em>{beer.tagline}</em>
       </td>
     </tr>
   );
