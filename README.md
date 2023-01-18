@@ -8,7 +8,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 - The search, searches through fetched data. It's possible to search the entire data set, but to my knowledge only certain parts like beer_name (and not e.g. beer_description), and I'm not sure how to search within multiple fields at once (match against both e.g. beer_name and beer_yeast. I tried: https://api.punkapi.com/v2/beers?beer_name=Mixtape8|yeast=pilsen but it's only matching against the first, beer_name.)
 
-- The API does not contain meta data such as "total number of pages" or "total number of beers", therefore it's difficult to know the number of pages to include. To have some kind of pagination I decided to fetch (at most) 80 items and divide them in to pages of 25 items. I know this isn't the optimal solution.
+- The API does not contain meta data such as "total number of pages" or "total number of beers", therefore it's difficult to know the number of pages to include. To have some kind of pagination I decided to fetch (at most) 80 items and divide them in to pages of 25 items. I know this isn't the optimal solution. And another strategy could be to just have previous and next buttons in the pagination (without indicating the number of pages) and make next enabled as long as the current page has 25 items. 
 
 - Similarly, there's no information about the beer with the highest or lowest abv (so the max set for the filter range "Alcohol by volume" is based on the current existing highest abv in a beer which is 67.5%). It would be possible to fetch the entire list of beers, but the load time is likely to be high, and it would defeat the purpose of using the url requests like ?abv_gt="30" (?).
 
