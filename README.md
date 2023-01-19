@@ -25,6 +25,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 - Some elements can be enhanced (like making the search bar and pagination in dark mode and make the ABV progress bar on the detail page prettier)
 - Randomize beers can probably be nicer, but I wasn't sure how to trigger a react hook (useBeers) on click.
 - Add filters, e.g. type of beer (lager, ale, other), date first brewed
+- Fetching data too often (still learning how to best use hooks)
 - Caching / temporarily storing the data since it's likely not to change too often
 
 Note: This project was built with some lack of React experience, so it can probably be better structured and use React features more efficiently.
