@@ -17,6 +17,8 @@ export interface BeerFilter {
   beer_name: string;
   abv_gt?: number;
   abv_lt?: number;
+  ebc_gt?: number;
+  ebc_lt?: number;
   page?: number;
 }
 

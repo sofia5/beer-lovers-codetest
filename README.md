@@ -28,6 +28,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 - Caching / temporarily storing the data since it's likely not to change too often
 - Make a nicer error page
 - Retain the filter when going back from BeerDetails to BeerList
+- The sorting only occurs on the fetched data, and thus, when changing page new beers with higher/lower values can appear
 
 Note: This project was built with some lack of React experience, so it can probably be better structured and use React features more efficiently.
 

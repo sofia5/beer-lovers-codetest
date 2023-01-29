@@ -23,6 +23,8 @@ const BeerList = () => {
     beer_name: searchParams.get("beer_name") ?? "",
     abv_gt: Number(searchParams.get("abv_gt")) || undefined,
     abv_lt: Number(searchParams.get("abv_lt")) || undefined,
+    ebc_gt: Number(searchParams.get("ebc_gt")) || undefined,
+    ebc_lt: Number(searchParams.get("ebc_lt")) || undefined,
     page: Number(searchParams.get("page")) || undefined,
   };
 
@@ -53,6 +55,14 @@ const BeerList = () => {
       params.append("abv_lt", filter.abv_lt.toString());
     }
 
+    if (filter.ebc_gt) {
+      params.append("ebc_gt", filter.ebc_gt.toString());
+    }
+
+    if (filter.ebc_lt) {
+      params.append("ebc_lt", filter.ebc_lt.toString());
+    }
+
     if (filter.page) {
       params.append("page", filter.page.toString());
     }
@@ -73,15 +83,16 @@ const BeerList = () => {
     }));
   };
 
-  const updateAbvFilter = (
+  const updateRangeFilter = (
     event: React.FormEvent<HTMLDivElement>,
-    minOrMax: MinOrMax
+    minOrMax: MinOrMax,
+    type: keyof Beer
   ) => {
     setFilter((prevFilter) => {
       const value = parseInt((event.target as HTMLInputElement).value);
       return {
         ...prevFilter,
-        [minOrMax === "min" ? "abv_gt" : "abv_lt"]: value,
+        [minOrMax === "min" ? type + "_gt" : type + "_lt"]: value,
         page: undefined,
       };
     });
@@ -133,8 +144,21 @@ const BeerList = () => {
                 max={70}
                 initialMin={filter.abv_gt ?? 0}
                 initialMax={filter.abv_lt ?? 70}
-                handleChange={updateAbvFilter}
+                handleChange={(event, minOrMax) =>
+                  updateRangeFilter(event, minOrMax, "abv")
+                }
                 label="Alcohol by volume"
+              />
+              <MultiRangeSlider
+                min={0}
+                // max ebc (31+ black)
+                max={31}
+                initialMin={filter.ebc_gt ?? 0}
+                initialMax={filter.ebc_lt ?? 31}
+                handleChange={(event, minOrMax) =>
+                  updateRangeFilter(event, minOrMax, "ebc")
+                }
+                label="Beer by color"
               />
             </div>
           )}

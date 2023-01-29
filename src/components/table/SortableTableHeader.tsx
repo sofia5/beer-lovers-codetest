@@ -22,15 +22,13 @@ const SortableTableHeader = ({
   handleClick: (newActive: ActiveTableHeader) => void;
   sortable?: boolean;
 }) => {
+  // Set which header column is active and toggle it's order (asc / desc)
   const toggleActive = () => {
-    if (!(active?.id === id)) {
-      handleClick({ id, ascOrDesc: "asc" });
-    } else {
-      handleClick({
-        id,
-        ascOrDesc: active.ascOrDesc === "desc" ? "asc" : "desc",
-      });
-    }
+    handleClick({
+      id,
+      ascOrDesc:
+        active?.id === id && active.ascOrDesc === "desc" ? "asc" : "desc",
+    });
   };
 
   return (
@@ -44,9 +42,9 @@ const SortableTableHeader = ({
               icon={faSortUp}
               className={`
               ${
-                !(active?.id === id && active?.ascOrDesc === "asc")
-                  ? "text-muted"
-                  : undefined
+                active?.id === id && active.ascOrDesc === "asc"
+                  ? undefined
+                  : "text-muted"
               }`}
             />
             <FontAwesomeIcon
@@ -54,9 +52,9 @@ const SortableTableHeader = ({
               className={`
               ${styles.sortIconRight}
               ${
-                !(active?.id === id && active?.ascOrDesc === "desc")
-                  ? "text-muted"
-                  : undefined
+                active?.id === id && active.ascOrDesc === "desc"
+                  ? undefined
+                  : "text-muted"
               }`}
             />
           </span>
