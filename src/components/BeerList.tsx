@@ -7,10 +7,11 @@ import { faFilter } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
 import MultiRangeSlider, { MinOrMax } from "./MultiRangeSlider";
 import styles from "../scss/BeerList.module.scss";
-import { BeerFilter } from "../types/interfaces";
+import { Beer, BeerFilter } from "../types/interfaces";
 import { useSearchParams } from "react-router-dom";
 import Pagination from "./Pagination";
 import { REQUEST_STATUS } from "../hooks/useFetch";
+import sortBeers from "../helpers/sortBeers";
 
 const BeerList = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -24,11 +25,14 @@ const BeerList = () => {
 
   const [filterOpen, setFilterOpen] = useState(false);
   const [filter, setFilter] = useState<BeerFilter>(newFilter);
+  const [sortedBeers, setSortedBeers] = useState<Beer[]>();
   const { beers, requestStatus, error } = useBeers({ searchParams });
 
-  beers.sort((a, b) => {
-    return b.abv - a.abv;
-  });
+  useEffect(() => {
+    if (beers.length > 0) {
+      setSortedBeers(sortBeers(beers, "abv", "desc"));
+    }
+  }, [beers]);
 
   // Set filters as search params
   useEffect(() => {
@@ -53,35 +57,33 @@ const BeerList = () => {
     setSearchParams(params);
   }, [filter, setSearchParams]);
 
-  const setSearchTerm = (event: React.FormEvent<HTMLDivElement>) => {
-    filter.page = undefined;
-    setFilter({
-      ...filter,
+  const updateSearchTerm = (event: React.FormEvent<HTMLDivElement>) => {
+    setFilter((prevFilter) => ({
+      ...prevFilter,
       beer_name: (event.target as HTMLInputElement).value,
-    });
+      page: undefined,
+    }));
   };
 
-  const setAbvFilter = (
+  const updateAbvFilter = (
     event: React.FormEvent<HTMLDivElement>,
     minOrMax: MinOrMax
   ) => {
-    filter.page = undefined;
-    minOrMax === "min"
-      ? setFilter({
-          ...filter,
-          abv_gt: parseInt((event.target as HTMLInputElement).value),
-        })
-      : setFilter({
-          ...filter,
-          abv_lt: parseInt((event.target as HTMLInputElement).value),
-        });
+    setFilter((prevFilter) => {
+      const value = parseInt((event.target as HTMLInputElement).value);
+      return {
+        ...prevFilter,
+        [minOrMax === "min" ? "abv_gt" : "abv_lt"]: value,
+        page: undefined,
+      };
+    });
   };
 
-  const setPage = (page: number) => {
-    setFilter({
-      ...filter,
-      page: page,
-    });
+  const updatePage = (page: number) => {
+    setFilter((prevFilter) => ({
+      ...prevFilter,
+      page,
+    }));
   };
 
   if (requestStatus === REQUEST_STATUS.FAILURE) {
@@ -90,6 +92,7 @@ const BeerList = () => {
 
   return (
     <div className="card bg-dark border-dark">
+      {error}
       <div className="p-0 card-body">
         <div className="m-5">
           <div className="row d-flex justify-content-between align-items-baseline">
@@ -105,7 +108,7 @@ const BeerList = () => {
             <div className="col-11 col-lg-6">
               <SearchBar
                 initialValue={filter.beer_name}
-                handleChange={setSearchTerm}
+                handleChange={updateSearchTerm}
               ></SearchBar>
             </div>
           </div>
@@ -118,7 +121,7 @@ const BeerList = () => {
                 max={70}
                 initialMin={filter.abv_gt ?? 0}
                 initialMax={filter.abv_lt ?? 70}
-                handleChange={setAbvFilter}
+                handleChange={updateAbvFilter}
                 label="Alcohol by volume"
               />
             </div>
@@ -135,8 +138,9 @@ const BeerList = () => {
                   </tr>
                 </thead>
                 <tbody className={`${styles["beer-table-content"]}`}>
-                  {requestStatus === REQUEST_STATUS.SUCCESS &&
-                    beers.map((b) => <BeerItem key={b.id} beer={b} />)}
+                  {sortedBeers &&
+                    requestStatus === REQUEST_STATUS.SUCCESS &&
+                    sortedBeers.map((b) => <BeerItem key={b.id} beer={b} />)}
                 </tbody>
               </table>
               {requestStatus === REQUEST_STATUS.LOADING && (
@@ -151,7 +155,7 @@ const BeerList = () => {
                   </p>
                 )}
               <Pagination
-                handleClick={setPage}
+                handleClick={updatePage}
                 activePage={filter.page ?? 1}
                 lastPage={beers.length < 25}
               />

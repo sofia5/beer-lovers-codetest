@@ -5,7 +5,7 @@ import LoadingSpinner from "./LoadingSpinner";
 import styles from "../scss/BeerDetails.module.scss";
 import BackButton from "./BackButton";
 import BeerColor from "./BeerColor";
-import dateFormatter from "../helpers/DateFormatter";
+import dateFormatter from "../helpers/dateFormatter";
 import { useEffect, useState } from "react";
 import { REQUEST_STATUS } from "../hooks/useFetch";
 

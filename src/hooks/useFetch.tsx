@@ -21,7 +21,7 @@ const useFetch = <T,>(
 ): FetchData<T> => {
   const [data, setData] = useState<T>();
   const [requestStatus, setRequestStatus] = useState(REQUEST_STATUS.LOADING);
-  const [error, setError] = useState<unknown>("");
+  const [error, setError] = useState<unknown>();
 
   useEffect(() => {
     const fetchData = async () => {
