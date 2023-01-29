@@ -5,105 +5,86 @@ import SearchBar from "./SearchBar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFilter } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
-import MultiRangeSlider from "./MultiRangeSlider";
+import MultiRangeSlider, { MinOrMax } from "./MultiRangeSlider";
 import styles from "../scss/BeerList.module.scss";
-import { Beer, BeerFilter } from "../types/interfaces";
-import { useLocation, useSearchParams } from "react-router-dom";
+import { BeerFilter } from "../types/interfaces";
+import { useSearchParams } from "react-router-dom";
 import Pagination from "./Pagination";
+import { REQUEST_STATUS } from "../hooks/useFetch";
 
 const BeerList = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const { hash } = useLocation();
 
-  const emptyFilter = {
-    searchTerm: searchParams.get("searchTerm") ?? "",
+  const newFilter = {
+    beer_name: searchParams.get("beer_name") ?? "",
     abv_gt: Number(searchParams.get("abv_gt")) || undefined,
     abv_lt: Number(searchParams.get("abv_lt")) || undefined,
+    page: Number(searchParams.get("page")) || undefined,
   };
 
   const [filterOpen, setFilterOpen] = useState(false);
-  const [filteredBeerList, setFilteredBeerList] = useState<Beer[]>([]);
-  const [pageData, setPageData] = useState<Beer[]>([]);
-  const [pageNumber, setPageNumber] = useState(1);
-  const [filter, setFilter] = useState<BeerFilter>(emptyFilter);
-
-  const { beers, loading, error } = useBeers({ searchParams });
-
-  const items_per_page = 25;
+  const [filter, setFilter] = useState<BeerFilter>(newFilter);
+  const { beers, requestStatus, error } = useBeers({ searchParams });
 
   beers.sort((a, b) => {
     return b.abv - a.abv;
   });
 
-  // Set filteredList
+  // Set filters as search params
   useEffect(() => {
-    let filteredBeers = [...beers];
-
-    filteredBeers = filteredBeers.filter(
-      (fb) =>
-        fb.name.toLowerCase().includes(filter.searchTerm.toLowerCase()) ||
-        fb.tagline.toLowerCase().includes(filter.searchTerm.toLowerCase()) ||
-        fb.first_brewed
-          .toLowerCase()
-          .includes(filter.searchTerm.toLowerCase()) ||
-        fb.abv
-          .toString()
-          .toLowerCase()
-          .includes(filter.searchTerm.toLowerCase())
-
-      // Currently just filtering on parameters in table, but easy to add properties from detail page as well (just not as visible)
-      // fb.description
-      //   .toLowerCase()
-      //   .includes(filter.searchTerm.toLowerCase()) ||
-      // fb.food_pairing
-      //   .join()
-      //   .toLowerCase()
-      //   .includes(filter.searchTerm.toLowerCase())
-    );
-
     const params = new URLSearchParams();
 
-    if (filter.searchTerm) {
-      params.append("searchTerm", filter.searchTerm);
+    if (filter.beer_name) {
+      params.append("beer_name", filter.beer_name.replace(" ", "_"));
     }
 
     if (filter.abv_gt) {
-      filteredBeers = filteredBeers.filter(
-        (fb) => filter.abv_gt && fb.abv >= filter.abv_gt
-      );
-
       params.append("abv_gt", filter.abv_gt.toString());
     }
 
     if (filter.abv_lt) {
-      filteredBeers = filteredBeers.filter(
-        (fb) => filter.abv_lt && fb.abv <= filter.abv_lt
-      );
-
       params.append("abv_lt", filter.abv_lt.toString());
     }
 
+    if (filter.page) {
+      params.append("page", filter.page.toString());
+    }
+
     setSearchParams(params);
+  }, [filter, setSearchParams]);
 
-    setFilteredBeerList(filteredBeers);
-  }, [filter, beers, setSearchParams]);
+  const setSearchTerm = (event: React.FormEvent<HTMLDivElement>) => {
+    filter.page = undefined;
+    setFilter({
+      ...filter,
+      beer_name: (event.target as HTMLInputElement).value,
+    });
+  };
 
-  //Set page data
-  useEffect(() => {
-    const page = [...filteredBeerList];
+  const setAbvFilter = (
+    event: React.FormEvent<HTMLDivElement>,
+    minOrMax: MinOrMax
+  ) => {
+    filter.page = undefined;
+    minOrMax === "min"
+      ? setFilter({
+          ...filter,
+          abv_gt: parseInt((event.target as HTMLInputElement).value),
+        })
+      : setFilter({
+          ...filter,
+          abv_lt: parseInt((event.target as HTMLInputElement).value),
+        });
+  };
 
-    setPageNumber(hash ? parseInt(hash.split("-")[1]) : 1);
+  const setPage = (page: number) => {
+    setFilter({
+      ...filter,
+      page: page,
+    });
+  };
 
-    setPageData(
-      page.filter(
-        (p, index) =>
-          index >= (pageNumber - 1) * items_per_page &&
-          index < (pageNumber - 1) * items_per_page + items_per_page
-      )
-    );
-  }, [hash, filteredBeerList, pageNumber]);
-
-  if (error) {
+  if (requestStatus === REQUEST_STATUS.FAILURE) {
     return <div>{error}</div>;
   }
 
@@ -123,13 +104,8 @@ const BeerList = () => {
             </div>
             <div className="col-11 col-lg-6">
               <SearchBar
-                initialValue={filter.searchTerm}
-                handleChange={(event) =>
-                  setFilter({
-                    ...filter,
-                    searchTerm: (event.target as HTMLInputElement).value,
-                  })
-                }
+                initialValue={filter.beer_name}
+                handleChange={setSearchTerm}
               ></SearchBar>
             </div>
           </div>
@@ -142,21 +118,7 @@ const BeerList = () => {
                 max={70}
                 initialMin={filter.abv_gt ?? 0}
                 initialMax={filter.abv_lt ?? 70}
-                handleChange={(event, minOrMax) =>
-                  minOrMax === "min"
-                    ? setFilter({
-                        ...filter,
-                        abv_gt: parseInt(
-                          (event.target as HTMLInputElement).value
-                        ),
-                      })
-                    : setFilter({
-                        ...filter,
-                        abv_lt: parseInt(
-                          (event.target as HTMLInputElement).value
-                        ),
-                      })
-                }
+                handleChange={setAbvFilter}
                 label="Alcohol by volume"
               />
             </div>
@@ -167,33 +129,32 @@ const BeerList = () => {
                 <thead className={styles["table-head"]}>
                   <tr className="text-uppercase text-success">
                     <th>Name</th>
-                    <th>First brewed</th>
                     <th>Alcohol by volume</th>
+                    <th>First brewed</th>
                     <th>Tagline</th>
                   </tr>
                 </thead>
                 <tbody className={`${styles["beer-table-content"]}`}>
-                  {filteredBeerList.length > 0 &&
-                    !loading &&
-                    pageData.map((b) => <BeerItem key={b.id} beer={b} />)}
+                  {requestStatus === REQUEST_STATUS.SUCCESS &&
+                    beers.map((b) => <BeerItem key={b.id} beer={b} />)}
                 </tbody>
               </table>
-              {loading && (
+              {requestStatus === REQUEST_STATUS.LOADING && (
                 <div className="mt-3">
                   <LoadingSpinner fullPage={false} />
                 </div>
               )}
-              {Math.floor(filteredBeerList.length / items_per_page) >= 1 && (
-                <Pagination
-                  pages={Math.ceil(filteredBeerList.length / items_per_page)}
-                  activePage={pageNumber}
-                />
-              )}
-              {filteredBeerList.length === 0 && !loading && (
-                <p className="mt-4 text-white">
-                  No beers available with this filter
-                </p>
-              )}
+              {beers.length === 0 &&
+                requestStatus === REQUEST_STATUS.SUCCESS && (
+                  <p className="mt-4 text-white">
+                    No beers available with this filter
+                  </p>
+                )}
+              <Pagination
+                handleClick={setPage}
+                activePage={filter.page ?? 1}
+                lastPage={beers.length < 25}
+              />
             </div>
           </div>
         </div>

@@ -13,7 +13,7 @@ const useBeers = ({ id, random }: { id?: string; random: boolean }) => {
     throw new Error("Expected a URL to be present");
   }
 
-  const { data, loading, error } = useFetch<Beer[]>(url, "GET");
+  const { data, requestStatus, error } = useFetch<Beer[]>(url, "GET");
   const [beer, setBeer] = useState<Beer>();
   useEffect(() => {
     if (data) {
@@ -21,7 +21,7 @@ const useBeers = ({ id, random }: { id?: string; random: boolean }) => {
     }
   }, [data]);
 
-  return { beer, loading, error };
+  return { beer, requestStatus, error };
 };
 
 export default useBeers;

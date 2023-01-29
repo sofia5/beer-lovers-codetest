@@ -7,6 +7,7 @@ import BackButton from "./BackButton";
 import BeerColor from "./BeerColor";
 import dateFormatter from "../helpers/DateFormatter";
 import { useEffect, useState } from "react";
+import { REQUEST_STATUS } from "../hooks/useFetch";
 
 const BeerItem = () => {
   const [dateFirstBrewed, setDateFirstBrewed] = useState<Date>();
@@ -17,7 +18,7 @@ const BeerItem = () => {
     throw new Error("ID should be set here");
   }
 
-  const { beer, loading, error } = useBeer({ id, random: false });
+  const { beer, requestStatus, error } = useBeer({ id, random: false });
 
   useEffect(() => {
     if (beer) {
@@ -45,9 +46,9 @@ const BeerItem = () => {
 
   if (!id) {
     return <NotFound />;
-  } else if (loading) {
+  } else if (requestStatus === REQUEST_STATUS.LOADING) {
     return <LoadingSpinner fullPage={true} />;
-  } else if (error) {
+  } else if (requestStatus === REQUEST_STATUS.FAILURE) {
     return <div>{error}</div>;
   }
 

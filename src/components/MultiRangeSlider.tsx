@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useState, useRef, FormEvent } from "react";
 import PropTypes from "prop-types";
 import styles from "../scss/MultiRangeSlider.module.scss";
-import { MinOrMax } from "../types/types";
+
+export type MinOrMax = "min" | "max";
 
 const MultiRangeSlider = ({
   min,

@@ -1,11 +1,18 @@
 import { useState, useEffect } from "react";
-import { RequestMethod } from "../types/types";
+
+export type RequestMethod = "GET" | "PUT" | "POST" | "DELETE";
 
 interface FetchData<T> {
   data?: T;
-  loading: boolean;
+  requestStatus: number;
   error: any;
 }
+
+export const REQUEST_STATUS = {
+  LOADING: 0,
+  SUCCESS: 1,
+  FAILURE: 2,
+};
 
 const useFetch = <T,>(
   url: string,
@@ -13,13 +20,11 @@ const useFetch = <T,>(
   headers?: Headers
 ): FetchData<T> => {
   const [data, setData] = useState<T>();
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<any>();
+  const [requestStatus, setRequestStatus] = useState(REQUEST_STATUS.LOADING);
+  const [error, setError] = useState<unknown>("");
 
   useEffect(() => {
     const fetchData = async () => {
-      setLoading(true);
-      setError(undefined);
       try {
         const response = await fetch(url, {
           method,
@@ -27,15 +32,16 @@ const useFetch = <T,>(
         });
         const result = await response.json();
         setData(result);
-      } catch (err) {
-        setError(err);
+        setRequestStatus(REQUEST_STATUS.SUCCESS);
+      } catch (e) {
+        setRequestStatus(REQUEST_STATUS.FAILURE);
+        setError(e);
       }
-      setLoading(false);
     };
     fetchData();
   }, [url, method, headers]);
 
-  return { data, loading, error };
+  return { data, requestStatus, error };
 };
 
 export default useFetch;

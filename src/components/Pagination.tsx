@@ -1,12 +1,11 @@
-import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
-
 const Pagination = ({
-  pages,
   activePage,
+  lastPage,
+  handleClick,
 }: {
-  pages: number;
   activePage: number;
+  lastPage: boolean;
+  handleClick: (page: number) => void;
 }) => {
   return (
     <nav className="mt-4" aria-label="Page navigation">
@@ -14,16 +13,33 @@ const Pagination = ({
         <li
           className={`page-item ${activePage === 1 ? "disabled" : undefined}`}
         >
-          <a
+          <button
             className="page-link"
-            href={`#page-${activePage - 1}`}
+            onClick={() => handleClick(activePage - 1)}
             tabIndex={activePage === 1 ? -1 : undefined}
             aria-disabled={activePage === 1}
           >
             Previous
+          </button>
+        </li>
+        <li className="page-item">
+          <a className="page-link active" href={`#page-${activePage}`}>
+            {activePage}
           </a>
         </li>
-        {Array.from(Array(pages), (e, i) => (
+        <li className={`page-item ${lastPage ? "disabled" : undefined}`}>
+          <button
+            className="page-link"
+            onClick={() => handleClick(activePage + 1)}
+            tabIndex={lastPage ? -1 : undefined}
+            aria-disabled={lastPage}
+          >
+            Next
+          </button>
+        </li>
+
+        {/* If possible to know number of beers available */}
+        {/* {Array.from(Array(pages), (e, i) => (
           <li key={i} className="page-item">
             <a
               className={`page-link ${
@@ -34,7 +50,7 @@ const Pagination = ({
               {i + 1}
             </a>
           </li>
-        ))}
+        ))} 
         <li
           className={`page-item ${
             activePage === pages ? "disabled" : undefined
@@ -48,7 +64,7 @@ const Pagination = ({
           >
             Next
           </a>
-        </li>
+        </li> */}
       </ul>
     </nav>
   );

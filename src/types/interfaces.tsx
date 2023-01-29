@@ -1,9 +1,3 @@
-export interface FetchData<T> {
-  data: T;
-  loading: boolean;
-  error: any;
-}
-
 export interface Beer {
   id: number;
   name: string;
@@ -20,9 +14,10 @@ export interface Beer {
 }
 
 export interface BeerFilter {
-  searchTerm: string;
+  beer_name: string;
   abv_gt?: number;
   abv_lt?: number;
+  page?: number;
 }
 
 export interface EbcBeerColor {
