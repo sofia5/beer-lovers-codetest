@@ -12,3 +12,8 @@ body {
 .full-page {
   height: 90vh;
 }
+
+.action:hover {
+  cursor: pointer;
+  color: lightgray;
+}

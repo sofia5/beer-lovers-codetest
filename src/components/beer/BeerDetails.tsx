@@ -1,13 +1,13 @@
 import { useParams } from "react-router-dom";
-import NotFound from "./NotFound";
-import useBeer from "../hooks/useBeer";
-import LoadingSpinner from "./LoadingSpinner";
-import styles from "../scss/BeerDetails.module.scss";
-import BackButton from "./BackButton";
+import NotFound from "../shared/NotFound";
+import useBeer from "../../hooks/useBeer";
+import LoadingSpinner from "../shared/LoadingSpinner";
+import styles from "../../scss/BeerDetails.module.scss";
+import BackButton from "../shared/BackButton";
 import BeerColor from "./BeerColor";
-import dateFormatter from "../helpers/dateFormatter";
+import dateFormatter from "../../helpers/dateFormatter";
 import { useEffect, useState } from "react";
-import { REQUEST_STATUS } from "../hooks/useFetch";
+import { REQUEST_STATUS } from "../../hooks/useFetch";
 
 const BeerItem = () => {
   const [dateFirstBrewed, setDateFirstBrewed] = useState<Date>();

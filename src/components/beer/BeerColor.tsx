@@ -1,11 +1,12 @@
 import PropTypes from "prop-types";
-import data from "../data/beerColors.json";
-import styles from "../scss/BeerColor.module.scss";
-import { EbcBeerColor } from "../types/interfaces";
+import data from "../../data/beerColors.json";
+import styles from "../../scss/BeerColor.module.scss";
+import { EbcBeerColor } from "../../types/interfaces";
 
 const BeerColor = ({ ebc }: { ebc: number }) => {
   const roundedEbc = Math.round(ebc);
   let beerColorItem: EbcBeerColor;
+
   if (roundedEbc < 1) {
     beerColorItem = { ebc_number: 0, color_code: "white" };
   } else if (roundedEbc > 30) {

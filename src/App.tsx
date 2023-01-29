@@ -1,10 +1,10 @@
 import { Routes, Route } from "react-router-dom";
 import "./scss/App.scss";
-import Header from "./components/Header";
-import BeerList from "./components/BeerList";
-import BeerDetails from "./components/BeerDetails";
-import NotFound from "./components/NotFound";
-import RandomizeBeer from "./components/RandomizeBeer";
+import Header from "./components/shared/Header";
+import BeerList from "./components/beer/BeerList";
+import BeerDetails from "./components/beer/BeerDetails";
+import NotFound from "./components/shared/NotFound";
+import RandomizeBeer from "./components/beer/RandomizeBeer";
 
 const App = () => {
   return (

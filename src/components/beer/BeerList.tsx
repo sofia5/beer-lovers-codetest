@@ -1,17 +1,20 @@
-import useBeers from "../hooks/useBeers";
+import useBeers from "../../hooks/useBeers";
 import BeerItem from "./BeerItem";
-import LoadingSpinner from "./LoadingSpinner";
-import SearchBar from "./SearchBar";
+import LoadingSpinner from "../shared/LoadingSpinner";
+import SearchBar from "../filter/SearchBar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFilter } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
-import MultiRangeSlider, { MinOrMax } from "./MultiRangeSlider";
-import styles from "../scss/BeerList.module.scss";
-import { Beer, BeerFilter } from "../types/interfaces";
+import MultiRangeSlider, { MinOrMax } from "../filter/MultiRangeSlider";
+import styles from "../../scss/BeerList.module.scss";
+import { Beer, BeerFilter } from "../../types/interfaces";
 import { useSearchParams } from "react-router-dom";
-import Pagination from "./Pagination";
-import { REQUEST_STATUS } from "../hooks/useFetch";
-import sortBeers from "../helpers/sortBeers";
+import Pagination from "../table/Pagination";
+import { REQUEST_STATUS } from "../../hooks/useFetch";
+import sortBeers from "../../helpers/sortBeers";
+import SortableTableHeader, {
+  ActiveTableHeader,
+} from "../table/SortableTableHeader";
 
 const BeerList = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -26,12 +29,12 @@ const BeerList = () => {
   const [filterOpen, setFilterOpen] = useState(false);
   const [filter, setFilter] = useState<BeerFilter>(newFilter);
   const [sortedBeers, setSortedBeers] = useState<Beer[]>();
+  const [activeTableHeader, setActiveTableHeader] =
+    useState<ActiveTableHeader>();
   const { beers, requestStatus, error } = useBeers({ searchParams });
 
   useEffect(() => {
-    if (beers.length > 0) {
-      setSortedBeers(sortBeers(beers, "abv", "desc"));
-    }
+    beers.length > 0 ? setSortedBeers(beers) : setSortedBeers(undefined);
   }, [beers]);
 
   // Set filters as search params
@@ -55,7 +58,12 @@ const BeerList = () => {
     }
 
     setSearchParams(params);
-  }, [filter, setSearchParams]);
+    if (activeTableHeader) {
+      setSortedBeers(
+        sortBeers(beers, activeTableHeader.id, activeTableHeader.ascOrDesc)
+      );
+    }
+  }, [activeTableHeader, beers, filter, setSearchParams]);
 
   const updateSearchTerm = (event: React.FormEvent<HTMLDivElement>) => {
     setFilter((prevFilter) => ({
@@ -86,19 +94,23 @@ const BeerList = () => {
     }));
   };
 
+  const updateActiveHeader = (newActive: ActiveTableHeader) => {
+    setActiveTableHeader(newActive);
+    setSortedBeers(sortBeers(beers, newActive.id, newActive.ascOrDesc));
+  };
+
   if (requestStatus === REQUEST_STATUS.FAILURE) {
     return <div>{error}</div>;
   }
 
   return (
     <div className="card bg-dark border-dark">
-      {error}
       <div className="p-0 card-body">
         <div className="m-5">
           <div className="row d-flex justify-content-between align-items-baseline">
             <div className="col-1 filter-wrapper">
               <FontAwesomeIcon
-                className={`fa-xl ${styles["filter-icon"]} ${
+                className={`fa-xl action ${styles["filter-icon"]} ${
                   filterOpen ? "text-success" : ""
                 }`}
                 icon={faFilter}
@@ -131,13 +143,34 @@ const BeerList = () => {
               <table className="mb-0 p-3 table table-dark table-hover">
                 <thead className={styles["table-head"]}>
                   <tr className="text-uppercase text-success">
-                    <th>Name</th>
-                    <th>Alcohol by volume</th>
-                    <th>First brewed</th>
-                    <th>Tagline</th>
+                    <SortableTableHeader
+                      name="Name"
+                      id="name"
+                      active={activeTableHeader}
+                      handleClick={updateActiveHeader}
+                    />
+                    <SortableTableHeader
+                      name="Alcohol by volume"
+                      id="abv"
+                      active={activeTableHeader}
+                      handleClick={updateActiveHeader}
+                    />
+                    <SortableTableHeader
+                      name="First brewed"
+                      id="first_brewed"
+                      active={activeTableHeader}
+                      handleClick={updateActiveHeader}
+                      sortable={false}
+                    />
+                    <SortableTableHeader
+                      name="Tagline"
+                      id="tagline"
+                      active={activeTableHeader}
+                      handleClick={updateActiveHeader}
+                    />
                   </tr>
                 </thead>
-                <tbody className={`${styles["beer-table-content"]}`}>
+                <tbody className="action">
                   {sortedBeers &&
                     requestStatus === REQUEST_STATUS.SUCCESS &&
                     sortedBeers.map((b) => <BeerItem key={b.id} beer={b} />)}

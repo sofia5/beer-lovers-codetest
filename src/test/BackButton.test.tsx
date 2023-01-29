@@ -1,5 +1,5 @@
 import { fireEvent, render, screen } from "@testing-library/react";
-import BackButton from "../components/BackButton";
+import BackButton from "../components/shared/BackButton";
 import { BrowserRouter } from "react-router-dom";
 
 describe("BackButton", () => {

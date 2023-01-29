@@ -17,7 +17,6 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 ## Improvements
 
 - More test cases could be added - I added a few to show the ideas I have regarding unit testing.
-- Add sorting for each column in the table
 - BeerList.tsx can probably be improved in terms of methods, fetching etc., I'm not sure if I'm using the best strategies.
 - Add more details to the item detail page
 - Currently many requests are sent from the multiRangeSlider, and ideally the event would only fire after drag. OnChange on a range input element seems to normally trigger after release, but for some reason it's not for me. Another option for my current design (if the event handling isn't improved) would be to add a search button and fire the event on click.

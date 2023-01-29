@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
-import BeerList from "../components/BeerList";
+import BeerList from "../components/beer/BeerList";
 import useBeers from "../hooks/useBeers";
 
 jest.mock("../hooks/useBeers");

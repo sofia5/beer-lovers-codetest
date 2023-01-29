@@ -1,8 +1,8 @@
-import { Beer } from "../types/interfaces";
+import { Beer } from "../../types/interfaces";
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
-import styles from "../scss/BeerItem.module.scss";
-import dateFormatter from "../helpers/dateFormatter";
+import styles from "../../scss/BeerItem.module.scss";
+import dateFormatter from "../../helpers/dateFormatter";
 import { useEffect, useState } from "react";
 
 const BeerItem = ({ beer }: { beer: Beer }) => {
